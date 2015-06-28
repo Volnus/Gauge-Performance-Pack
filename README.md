@@ -9,6 +9,7 @@ TURN OFF THE WORDPRESS ADMIN BAR
 add_filter('show_admin_bar', '__return_false');
 
 TURN OFF WORDPRESS 4.2 EMOJIS (SCRIPTS AND STYLES)
+
 // Dequeue the Emoji script
 function disable_emoji_dequeue_script() {
 wp_dequeue_script( 'emoji' );
@@ -23,6 +24,7 @@ remove_action( 'admin_print_styles', 'print_emoji_styles');
 remove_action( 'admin_print_scripts','print_emoji_detection_script');
 
 While this is not a performance item it will remove all of the generator tags added to this theme.
+
 // Hide Generator Tags
 remove_action('wp_head', 'wp_generator');
 remove_action('wp_head', 'woocommerce_generator');
