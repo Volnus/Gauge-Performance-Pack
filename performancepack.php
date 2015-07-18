@@ -34,3 +34,12 @@ function my_ao_noptimize() {
 		return false;
 	}
 }
+
+// Fix Change Avatar Page
+add_filter('autoptimize_filter_noptimize','second_ao_noptimize',10,0);
+function second_ao_noptimize() {
+if (strpos($_SERVER['REQUEST_URI'],'/change-avatar/')!==false) {
+return true;
+} else {
+return false;
+}
