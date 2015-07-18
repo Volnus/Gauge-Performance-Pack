@@ -29,6 +29,7 @@ remove_action('wp_head', 'woocommerce_generator');
 add_action('init', 'myoverride', 100);function myoverride() {remove_action('wp_head', array(visual_composer(), 'addMetaData'));}
 
 // Optimize WooCommerce
+
 add_action( 'wp_enqueue_scripts', 'child_manage_woocommerce_styles', 99 );
 function child_manage_woocommerce_styles() {
 first check that woo exists to prevent fatal errors
@@ -50,6 +51,7 @@ wp_dequeue_script( 'jquery-placeholder' );
 
 
 // Dequeue bbPress CSS and .js on non-forum pages.
+
 function isa_dequeue_bbp_style() {
     if ( class_exists('bbPress') ) {
       if ( ! is_bbpress() ) {
@@ -63,6 +65,7 @@ add_action( 'wp_enqueue_scripts', 'isa_dequeue_bbp_style', 99 );
 
 
 // Deregister Contact Form 7 styles
+
 add_action( 'wp_print_styles', 'aa_deregister_styles', 100 );
 function aa_deregister_styles() {
     if ( ! is_page( 'contact-us' ) ) {
@@ -71,6 +74,7 @@ function aa_deregister_styles() {
 }
 
 // Deregister Contact Form 7 JavaScript files on all pages without a form
+
 add_action( 'wp_print_scripts', 'aa_deregister_javascript', 100 );
 function aa_deregister_javascript() {
     if ( ! is_page( 'contact-us' ) ) {
