@@ -3,13 +3,14 @@
  * Plugin Name:       Gauge Performance Pack
  * Plugin URI:        https://github.com/Volnus/Gauge-Performance-Pack/
  * Description:       This plugin makes several modifications to the WordPress admin and the Frontend to improve the experience and performance of the website.
- * Version:           2.0
+ * Version:           3.0
  * Author:            Scott Hartley
  * Author URI:        http://thearcadecorner.com
 */
 /*****************************************
 * 1. Reset
-* 2. Conditional Loading 
+* 2. Improved bbPress Form
+* 3. Conditional Loading 
 *****************************************/
 /******* 1. Reset ********/
 
@@ -29,7 +30,17 @@ remove_action('wp_head', 'woocommerce_generator');
 //Turn Off Admin Bar
 add_filter('show_admin_bar', '__return_false');
 
-/******* 2. CONDITIONAL LOADING ********/
+/******* 2. IMPROVED BBPRESS FORM ********/
+
+// Enable MCE Editor for bbPress
+function bbp_enable_visual_editor( $args = array() ) {
+    $args['tinymce'] = true;
+    $args['quicktags'] = false;
+    return $args;
+}
+add_filter( 'bbp_after_get_the_content_parse_args', 'bbp_enable_visual_editor' );
+
+/******* 3. CONDITIONAL LOADING ********/
 
 //Dequeue the Emoji script
 function disable_emoji_dequeue_script() { wp_dequeue_script( 'emoji' ); } add_action( 'wp_print_scripts', 'disable_emoji_dequeue_script', 100 );
@@ -37,6 +48,11 @@ function disable_emoji_dequeue_script() { wp_dequeue_script( 'emoji' ); } add_ac
 //Remove the emoji styles
 remove_action( 'wp_print_styles', 'print_emoji_styles' ); remove_action( 'wp_print_scripts', 'print_emoji_detection_script' ); remove_action( 'wp_head', 'print_emoji_detection_script', 7 ); remove_action( 'admin_print_styles', 'print_emoji_styles'); remove_action( 'admin_print_scripts','print_emoji_detection_script');
 
+// Remove Useless Stuff
+add_action( 'wp_print_styles',     'my_deregister_styles', 100 );
+function my_deregister_styles()    { 
+   wp_deregister_style( 'dashicons' ); 
+}
 
 // Optimize WooCommerce
 add_action( 'wp_enqueue_scripts', 'child_manage_woocommerce_styles', 99 );
@@ -96,10 +112,9 @@ function conditional_bbpress_styles_scripts() {
 	//first check that bbpress exists to prevent fatal errors
 	if ( function_exists( 'is_bbpress' ) ) {
 		//dequeue scripts and styles
-		if ( ! is_bbpress() ) {
-        wp_dequeue_style('bbp-default-css');
-        wp_dequeue_style('gp-bbp');
+		if ( ! is_bbpress() && ! is_buddypress() ) {
         wp_dequeue_style('bbp-default');
+        wp_dequeue_style('gp-bbp');      
         wp_dequeue_style( 'bbp_private_replies_style');
         wp_dequeue_script('bbpress-editor');
 		}
